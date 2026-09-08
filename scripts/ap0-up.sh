@@ -70,10 +70,26 @@ fi
 sleep 2
 if ip link show ap0 2>/dev/null | grep -q "UP"; then
     log "ap0 is UP"
-    IP=$(ip -4 addr show ap0 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' || echo "unknown")
+    IP=$(ip -4 addr show ap0 2>/dev/null | grep -oP '(?<=inet\s)\\d+(\\.\\d+){3}' || echo "unknown")
     log "ap0 IP: $IP"
 else
     log "WARNING: ap0 may not be fully up yet"
 fi
+
+# 6. Enable IP forwarding and NAT for internet access
+log "Enabling IP forwarding and NAT..."
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Clear existing NAT rules for wlan0 (if any) to avoid duplicates
+iptables -t nat -D POSTROUTING -o wlan0 -j MASQUERADE 2>/dev/null || true
+
+# Add NAT rule
+iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+
+# Allow forwarding between ap0 and wlan0
+iptables -A FORWARD -i ap0 -o wlan0 -j ACCEPT
+iptables -A FORWARD -i wlan0 -o ap0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+log "NAT and forwarding enabled"
 
 log "=== ap0 bring-up complete ==="
