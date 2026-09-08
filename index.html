@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP/STI Bridge — UNO Q Setup</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: #00d4ff;
+  }
+  .subtitle {
+    color: #888;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+  .card {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #0f3460;
+  }
+  .card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #00d4ff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card h2 .step {
+    background: #00d4ff;
+    color: #1a1a2e;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  input[type="text"], input[type="password"], input[type="number"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    background: #0a0a1a;
+    color: #e0e0e0;
+    font-size: 1rem;
+  }
+  input:focus {
+    outline: none;
+    border-color: #00d4ff;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #00d4ff;
+  }
+  .checkbox-group label {
+    margin-bottom: 0;
+    color: #e0e0e0;
+  }
+  .info {
+    background: #0f3460;
+    border-left: 3px solid #00d4ff;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+    color: #aaa;
+  }
+  .info strong {
+    color: #00d4ff;
+  }
+  .btn {
+    background: #00d4ff;
+    color: #1a1a2e;
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  .btn:hover {
+    background: #00b8e6;
+  }
+  .btn:disabled {
+    background: #444;
+    color: #888;
+    cursor: not-allowed;
+  }
+  .output {
+    display: none;
+    margin-top: 1.5rem;
+  }
+  .output.show {
+    display: block;
+  }
+  .file-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+  }
+  .file-tab {
+    background: #0a0a1a;
+    border: 1px solid #0f3460;
+    border-bottom: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #888;
+  }
+  .file-tab.active {
+    background: #16213e;
+    color: #00d4ff;
+    border-color: #00d4ff;
+  }
+  .file-content {
+    background: #0a0a1a;
+    border: 1px solid #0f3460;
+    border-radius: 0 8px 8px 8px;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 400px;
+    overflow-y: auto;
+    color: #00ff88;
+  }
+  .copy-btn {
+    background: #0f3460;
+    color: #00d4ff;
+    border: 1px solid #00d4ff;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .copy-btn:hover {
+    background: #00d4ff;
+    color: #1a1a2e;
+  }
+  .download-all {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .download-all .btn {
+    flex: 1;
+  }
+  .error {
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .mac-preview {
+    font-family: monospace;
+    background: #0a0a1a;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #00ff88;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>AP/STI Bridge Setup</h1>
+  <p class="subtitle">Configure your UNO Q to run a concurrent WiFi AP + Station</p>
+
+  <form id="setupForm">
+    <div class="card">
+      <h2><span class="step">1</span> Home WiFi (Station)</h2>
+      <p class="info">The UNO Q connects to your existing WiFi network for internet access.</p>
+      <label for="homeSsid">WiFi Network Name (SSID)</label>
+      <input type="text" id="homeSsid" placeholder="YourHomeWiFi" required>
+      <div class="error" id="homeSsidError"></div>
+
+      <label for="homePassword">WiFi Password</label>
+      <input type="password" id="homePassword" placeholder="WiFi password" required>
+      <div class="error" id="homePasswordError"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">2</span> Worker Access Point</h2>
+      <p class="info">This is the AP that worker devices (ESP32s, phones, etc.) connect to.</p>
+      <label for="apSsid">AP Network Name</label>
+      <input type="text" id="apSsid" placeholder="AP-bridge" value="AP-bridge" required>
+      <div class="error" id="apSsidError"></div>
+
+      <label for="apPassword">AP Password</label>
+      <input type="password" id="apPassword" placeholder="Min 8 characters" required>
+      <div class="error" id="apPasswordError"></div>
+
+      <div class="row">
+        <div>
+          <label for="apChannel">AP Channel</label>
+          <input type="number" id="apChannel" min="1" max="14" value="11" required>
+        </div>
+        <div>
+          <label for="apIp">AP IP Address</label>
+          <input type="text" id="apIp" value="192.168.4.1" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">3</span> Network Settings</h2>
+      <div class="row">
+        <div>
+          <label for="wlanMac">wlan0 MAC Address</label>
+          <input type="text" id="wlanMac" placeholder="14:b5:cd:ea:e6:8f" pattern="^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$">
+          <div class="info" style="margin-top:-0.5rem;">Find with: <code>ip link show wlan0</code></div>
+        </div>
+        <div>
+          <label>ap0 MAC (auto-generated)</label>
+          <div class="mac-preview" id="ap0MacPreview">14:b5:cd:ea:e6:90</div>
+          <div class="info" style="margin-top:0.3rem;">Last byte differs from wlan0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">4</span> Options</h2>
+      <div class="checkbox-group">
+        <input type="checkbox" id="includeBridge" checked>
+        <label for="includeBridge">Include RouterBridge setup (for MCU communication)</label>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="includeSystemd" checked>
+        <label for="includeSystemd">Include systemd service for boot persistence</label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn" id="generateBtn">Generate Config Files</button>
+  </form>
+
+  <div class="output" id="output">
+    <div class="card">
+      <h2>Generated Files</h2>
+      <div class="file-tabs" id="fileTabs"></div>
+      <div class="file-content" id="fileContent"></div>
+      <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+
+      <div class="download-all">
+        <button class="btn" id="downloadAllBtn" style="flex:2;">Download All as ZIP</button>
+        <button class="btn" id="downloadCurrentBtn" style="flex:1;">Download Current</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Deployment Instructions</h2>
+      <div id="deployInstructions" style="font-size:0.9rem; line-height:1.6;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('setupForm');
+const output = document.getElementById('output');
+const fileTabs = document.getElementById('fileTabs');
+const fileContent = document.getElementById('fileContent');
+const copyBtn = document.getElementById('copyBtn');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
+const downloadCurrentBtn = document.getElementById('downloadCurrentBtn');
+const deployInstructions = document.getElementById('deployInstructions');
+
+let generatedFiles = {};
+let currentFile = '';
+
+// Auto-generate ap0 MAC when wlan0 MAC changes
+document.getElementById('wlanMac').addEventListener('input', function() {
+  const mac = this.value.trim();
+  const match = mac.match(/^([0-9a-fA-F]{2}:){5}([0-9a-fA-F]{2})$/);
+  if (match) {
+    const lastByte = parseInt(match[2], 16);
+    const newLastByte = (lastByte + 1) % 256;
+    const newMac = mac.substring(0, 15) + newLastByte.toString(16).padStart(2, '0');
+    document.getElementById('ap0MacPreview').textContent = newMac;
+  }
+});
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  generateFiles();
+});
+
+function validate() {
+  let valid = true;
+  document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+  if (!document.getElementById('homeSsid').value.trim()) {
+    document.getElementById('homeSsidError').textContent = 'SSID is required';
+    valid = false;
+  }
+  if (document.getElementById('apPassword').value.length < 8) {
+    document.getElementById('apPasswordError').textContent = 'AP password must be at least 8 characters';
+    valid = false;
+  }
+  const channel = parseInt(document.getElementById('apChannel').value);
+  if (channel < 1 || channel > 14) {
+    document.getElementById('apChannel').value = 11;
+  }
+  return valid;
+}
+
+function generateFiles() {
+  if (!validate()) return;
+
+  const homeSsid = document.getElementById('homeSsid').value.trim();
+  const homePassword = document.getElementById('homePassword').value;
+  const apSsid = document.getElementById('apSsid').value.trim();
+  const apPassword = document.getElementById('apPassword').value;
+  const apChannel = document.getElementById('apChannel').value;
+  const apIp = document.getElementById('apIp').value.trim();
+  const wlanMac = document.getElementById('wlanMac').value.trim();
+  const ap0Mac = document.getElementById('ap0MacPreview').textContent;
+  const includeBridge = document.getElementById('includeBridge').checked;
+  const includeSystemd = document.getElementById('includeSystemd').checked;
+
+  // Generate NM profile UUID
+  const nmUuid = generateUUID();
+
+  generatedFiles = {};
+
+  // ap0-up.sh
+  generatedFiles['ap0-up.sh'] = `#!/bin/bash
+# Concurrent AP + Station setup for UNO Q
+# Generated by AP/STI Bridge Setup
+#
+# Usage: sudo ./ap0-up.sh
+
+set -euo pipefail
+
+LOG="/home/arduino/ap_sti_bridge/logs/ap0-up.log"
+mkdir -p "$(dirname "$LOG")"
+
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG"; }
+
+log "=== ap0 bring-up ==="
+
+# 1. Wait for wlan0 to associate (up to 60s)
+log "Waiting for wlan0 association..."
+for i in $(seq 1 60); do
+    if nmcli device show wlan0 2>/dev/null | grep -q "GENERAL.STATE.*100 (connected)"; then
+        log "wlan0 associated"
+        break
+    fi
+    if [ "$i" -eq 60 ]; then
+        log "ERROR: wlan0 did not associate within 60s"
+        exit 1
+    fi
+    sleep 1
+done
+
+# 2. Delete existing ap0 (if stale)
+if /sbin/iw dev 2>/dev/null | grep -q "Interface ap0"; then
+    log "Deleting stale ap0 vif..."
+    /sbin/iw dev ap0 del 2>/dev/null || true
+    sleep 1
+fi
+
+# 3. Create ap0 vif with unique MAC
+log "Creating ap0 vif on phy0..."
+/sbin/iw phy phy0 interface add ap0 type __ap addr ${ap0Mac}
+sleep 1
+log "ap0 created"
+
+# 4. Bring up ap0 via NM profile
+NM_PROFILE="${nmUuid}"
+if nmcli connection show "$NM_PROFILE" &>/dev/null; then
+    log "Activating NM profile on ap0..."
+    nmcli connection up "$NM_PROFILE" ifname ap0
+    log "AP activated"
+else
+    log "ERROR: NM profile $NM_PROFILE not found"
+    exit 1
+fi
+
+# 5. Verify
+sleep 2
+if ip link show ap0 2>/dev/null | grep -q "UP"; then
+    log "ap0 is UP"
+    IP=$(ip -4 addr show ap0 2>/dev/null | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}' || echo "unknown")
+    log "ap0 IP: $IP"
+else
+    log "WARNING: ap0 may not be fully up yet"
+fi
+
+log "=== ap0 bring-up complete ==="
+`;
+
+  // network_config.py
+  generatedFiles['network_config.py'] = `#!/usr/bin/env python3
+"""
+Network configuration — one place for WiFi credentials.
+Generated by AP/STI Bridge Setup
+"""
+
+import json
+import os
+import stat
+from pathlib import Path
+
+NET_CONFIG_FILE = Path.home() / "ap_sti_bridge" / "keys" / "network.json"
+
+_FALLBACK = {"ssid": "", "password": "", "notes": "auto-created; set real values"}
+
+
+def _ensure_perms(path: Path) -> None:
+    try:
+        path.chmod(stat.S_IRUSR | stat.S_IWUSR)  # 0600
+    except Exception:
+        pass
+
+
+def load_network_config() -> dict:
+    """Return {'ssid':..., 'password':...}. Creates a stub file if absent."""
+    if NET_CONFIG_FILE.exists():
+        try:
+            data = json.loads(NET_CONFIG_FILE.read_text())
+            _ensure_perms(NET_CONFIG_FILE)
+            return {
+                "ssid": data.get("ssid", ""),
+                "password": data.get("password", ""),
+            }
+        except Exception:
+            pass
+    else:
+        try:
+            NET_CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+            NET_CONFIG_FILE.write_text(json.dumps(_FALLBACK, indent=2))
+            _ensure_perms(NET_CONFIG_FILE)
+        except Exception:
+            pass
+    return {"ssid": _FALLBACK["ssid"], "password": _FALLBACK["password"]}
+
+
+def save_network_config(ssid: str, password: str) -> bool:
+    """Persist credentials with 0600 permissions."""
+    try:
+        NET_CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        NET_CONFIG_FILE.write_text(json.dumps(
+            {"ssid": ssid, "password": password}, indent=2))
+        _ensure_perms(NET_CONFIG_FILE)
+        return True
+    except Exception:
+        return False
+
+
+def is_configured() -> bool:
+    cfg = load_network_config()
+    return bool(cfg.get("ssid"))
+
+
+def status() -> dict:
+    """Safe for reporting: reports whether creds exist, never the password."""
+    cfg = load_network_config()
+    return {
+        "configured": bool(cfg.get("ssid")),
+        "ssid": cfg.get("ssid", ""),
+        "has_password": bool(cfg.get("password")),
+        "path": str(NET_CONFIG_FILE),
+    }
+
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) >= 3:
+        ok = save_network_config(sys.argv[1], sys.argv[2])
+        print("saved" if ok else "failed")
+    print(json.dumps(status(), indent=2))
+`;
+
+  // setup_bridge.sh
+  if (includeBridge) {
+    generatedFiles['setup_bridge.sh'] = `#!/bin/bash
+# RouterBridge setup for UNO Q
+# Generated by AP/STI Bridge Setup
+#
+# Usage: sudo ./setup_bridge.sh
+
+set -euo pipefail
+
+BRIDGE_PORT=8080
+
+echo "=== RouterBridge Daemon Setup ==="
+
+# Check if arduino-router is installed
+if ! command -v arduino-router &> /dev/null; then
+    echo "arduino-router not found. Installing..."
+    sudo apt-get update && sudo apt-get install -y arduino-router 2>/dev/null || true
+fi
+
+# If arduino-router isn't available, create a manual bridge using socat
+if ! command -v arduino-router &> /dev/null; then
+    echo "Using socat bridge as fallback..."
+
+    if ! command -v socat &> /dev/null; then
+        echo "Installing socat..."
+        sudo apt-get update && sudo apt-get install -y socat
+    fi
+
+    # Find the MCU TTY device
+    MCU_TTY=""
+    for dev in /dev/ttyRPMSG* /dev/ttyGS* /dev/ttyACM* /dev/ttyUSB*; do
+        if [ -e "$dev" ]; then
+            MCU_TTY="$dev"
+            break
+        fi
+    done
+
+    if [ -z "$MCU_TTY" ]; then
+        echo "WARNING: Could not find MCU TTY device."
+        echo "Expected devices: /dev/ttyRPMSG*, /dev/ttyACM*, /dev/ttyUSB*"
+        ls -la /dev/tty* 2>/dev/null | head -20
+        exit 1
+    fi
+
+    echo "MCU TTY: $MCU_TTY"
+
+    # Kill any existing socat bridge
+    pkill -f "socat.*$BRIDGE_PORT" 2>/dev/null || true
+    sleep 1
+
+    # Create bridge: TCP 8080 ↔ MCU serial
+    echo "Starting bridge: 0.0.0.0:$BRIDGE_PORT ↔ $MCU_TTY"
+    sudo socat -d -d \\
+        TCP-LISTEN:$BRIDGE_PORT,reuseaddr,fork \\
+        FILE:$MCU_TTY,raw,echo=0,b115200 \\
+        &
+
+    echo "Bridge PID: $!"
+else
+    echo "Configuring arduino-router..."
+    sudo arduino-router --port $BRIDGE_PORT --daemon
+fi
+
+echo ""
+echo "=== Bridge Active ==="
+echo "  Workers connect to: ${apIp}:$BRIDGE_PORT"
+`;
+  }
+
+  // systemd service
+  if (includeSystemd) {
+    generatedFiles['ap0-bridge.service'] = `[Unit]
+Description=Concurrent AP (ap0) for UNO Q
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /home/arduino/ap_sti_bridge/scripts/ap0-up.sh
+ExecStop=/sbin/iw dev ap0 del
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+`;
+  }
+
+  // NM profile config
+  generatedFiles['nm-profile.txt'] = `# Save this as: /etc/NetworkManager/system-connections/AP-bridge-ap0.nmconnection
+# Then run: sudo nmcli connection load /etc/NetworkManager/system-connections/AP-bridge-ap0.nmconnection
+
+[connection]
+id=AP-bridge-ap0
+uuid=${nmUuid}
+type=wifi
+interface-name=ap0
+autoconnect=false
+
+[wifi]
+mode=ap
+ssid=${apSsid}
+band=bg
+channel=${apChannel}
+
+[wifi-sec]
+key-mgmt=wpa-psk
+psk=${apPassword}
+
+[ipv4]
+method=shared
+address1=${apIp}/24
+
+[802-11-wireless]
+cloned-mac-address=stable
+
+# IMPORTANT: Set permissions after creating:
+# sudo chmod 600 /etc/NetworkManager/system-connections/AP-bridge-ap0.nmconnection
+`;
+
+  // Show output
+  output.classList.add('show');
+  renderTabs();
+  showFile(Object.keys(generatedFiles)[0]);
+  renderInstructions(nmUuid, apSsid, apPassword, apIp, apChannel, wlanMac, ap0Mac, includeBridge, includeSystemd);
+}
+
+function renderTabs() {
+  fileTabs.innerHTML = '';
+  Object.keys(generatedFiles).forEach((filename, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'file-tab' + (i === 0 ? ' active' : '');
+    tab.textContent = filename;
+    tab.onclick = () => showFile(filename);
+    fileTabs.appendChild(tab);
+  });
+}
+
+function showFile(filename) {
+  currentFile = filename;
+  fileContent.textContent = generatedFiles[filename];
+  document.querySelectorAll('.file-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.textContent === filename);
+  });
+}
+
+function renderInstructions(nmUuid, apSsid, apPassword, apIp, apChannel, wlanMac, ap0Mac, includeBridge, includeSystemd) {
+  let html = `
+    <ol style="padding-left:1.2rem;">
+      <li><strong>Copy files to the UNO Q:</strong><br>
+      <code>scp -r ap_sti_bridge/ arduino@uno-q:/home/arduino/</code></li>
+
+      <li><strong>Create the NM profile:</strong><br>
+      <code>sudo nmcli connection import type wifi file /home/arduino/ap_sti_bridge/nm-profile.txt</code><br>
+      Or copy the nm-profile.txt contents to:<br>
+      <code>/etc/NetworkManager/system-connections/AP-bridge-ap0.nmconnection</code><br>
+      Then: <code>sudo chmod 600 /etc/NetworkManager/system-connections/AP-bridge-ap0.nmconnection</code></li>
+
+      <li><strong>Connect to home WiFi (if not already):</strong><br>
+      <code>nmcli device wifi connect YOUR_SSID password YOUR_PASSWORD</code></li>
+
+      <li><strong>Bring up the AP:</strong><br>
+      <code>sudo bash /home/arduino/ap_sti_bridge/scripts/ap0-up.sh</code></li>
+  `;
+
+  if (includeBridge) {
+    html += `
+      <li><strong>Start the RouterBridge (optional):</strong><br>
+      <code>sudo bash /home/arduino/ap_sti_bridge/scripts/setup_bridge.sh</code></li>
+    `;
+  }
+
+  if (includeSystemd) {
+    const bridgeStep = includeBridge ? '6' : '5';
+    html += `
+      <li><strong>Enable boot persistence:</strong><br>
+      <code>sudo cp /home/arduino/ap_sti_bridge/ap0-bridge.service /etc/systemd/system/</code><br>
+      <code>sudo systemctl daemon-reload</code><br>
+      <code>sudo systemctl enable ap0-bridge.service</code></li>
+    `;
+  }
+
+  html += `
+      <li><strong>Verify:</strong><br>
+      <code>ip link show wlan0 ap0</code><br>
+      <code>ping -c 3 8.8.8.8</code></li>
+    </ol>
+
+    <h3 style="margin-top:1.5rem; margin-bottom:0.5rem; color:#00d4ff;">Quick Reference</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+      <tr><td style="padding:0.3rem; color:#888;">Home WiFi:</td><td><code>${document.getElementById('homeSsid').value}</code></td></tr>
+      <tr><td style="padding:0.3rem; color:#888;">Worker AP:</td><td><code>${apSsid}</code> (password: <code>${apPassword}</code>)</td></tr>
+      <tr><td style="padding:0.3rem; color:#888;">AP IP:</td><td><code>${apIp}</code></td></tr>
+      <tr><td style="padding:0.3rem; color:#888;">AP Channel:</td><td><code>${apChannel}</code></td></tr>
+      <tr><td style="padding:0.3rem; color:#888;">wlan0 MAC:</td><td><code>${wlanMac || '(auto-detected)'}</code></td></tr>
+      <tr><td style="padding:0.3rem; color:#888;">ap0 MAC:</td><td><code>${ap0Mac}</code></td></tr>
+      <tr><td style="padding:0.3rem; color:#888;">NM UUID:</td><td><code>${nmUuid}</code></td></tr>
+    </table>
+  `;
+
+  deployInstructions.innerHTML = html;
+}
+
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// Copy to clipboard
+copyBtn.addEventListener('click', function() {
+  navigator.clipboard.writeText(generatedFiles[currentFile]).then(() => {
+    this.textContent = 'Copied!';
+    setTimeout(() => this.textContent = 'Copy to Clipboard', 2000);
+  });
+});
+
+// Download current file
+downloadCurrentBtn.addEventListener('click', function() {
+  downloadFile(currentFile, generatedFiles[currentFile]);
+});
+
+// Download all as ZIP
+downloadAllBtn.addEventListener('click', function() {
+  downloadAllFiles();
+});
+
+function downloadFile(filename, content) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadAllFiles() {
+  // Simple ZIP-like approach: download files individually with a delay
+  // For a real ZIP, we'd need a library like JSZip
+  const files = Object.keys(generatedFiles);
+  let i = 0;
+
+  function next() {
+    if (i < files.length) {
+      downloadFile(files[i], generatedFiles[files[i]]);
+      i++;
+      setTimeout(next, 300);
+    }
+  }
+  next();
+}
+
+// Show first tab on load
+if (Object.keys(generatedFiles).length > 0) {
+  showFile(Object.keys(generatedFiles)[0]);
+}
+</script>
+</body>
+</html>
